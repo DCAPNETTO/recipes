@@ -98,7 +98,7 @@ class Recipe:
             "date_made" : results[0]['date_made'],
             "under_30_minutes" : results[0]['under_30_minutes']
         }
-        print("*************", recipe_creator)
+        print("***=**=**=******", recipe_creator)
         return recipe_creator
 
 
@@ -108,6 +108,10 @@ class Recipe:
     def update_recipe(cls, recipe_data):
         print("*=*=*=*=*=*", "Updating recipe...", "*=*=*=*=*=*" )
         if not cls.validate_recipe_data(recipe_data):
+            return False
+        this_recipe = cls.get_recipe_by_id(recipe_data['id'])
+        print("****++++#########++++" , this_recipe)
+        if session['user_id'] != this_recipe['user_id']:
             return False
         query = """
         UPDATE recipes
@@ -124,6 +128,10 @@ class Recipe:
     @classmethod
     def delete_recipe(cls, id):
         data = {"id" : id}
+        this_recipe = cls.get_recipe_by_id(id)
+        print("****++++#########++++" , this_recipe)
+        if session['user_id'] != this_recipe['user_id']:
+            return False
         query = """
         DELETE FROM recipes 
         WHERE id = %(id)s
